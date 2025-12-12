@@ -10,11 +10,18 @@ UA3F_local 仅作少量调整，修改部分日志逻辑确保兼容 Windows 和
 
 > ⚠️ 感谢原作者开源，本项目仅为测试性项目，请勿在大陆地区使用。
 
-## 🚀 部署 - 公共部分
+## 🚀 快速开始
 
-1. 下载你熟悉的 clash 客户端，这里以 [clash-verge-rev](https://github.com/clash-verge-rev/clash-verge-rev/releases) 作为演示
-2. 下载对应的 UA3F_local 客户端到电脑，并且请存放在一个没有中文路径的地方
-3. 启动 UA3F_local 服务，请在对应的文件夹下打开 cmd / 终端窗口输入下列命令执行：
+### 1. 准备工作
+
+下载你熟悉的 clash 客户端，这里以 [clash-verge-rev](https://github.com/clash-verge-rev/clash-verge-rev/releases) 作为演示。
+
+### 2. 下载并运行 UA3F_local
+
+1. 下载对应的 UA3F_local 客户端到电脑，并且解压请存放在一个没有中文路径的地方
+2. 启动 UA3F_local 服务，请在对应的文件夹下打开 cmd / 终端窗口 输入下列命令执行：
+
+![启动 UA3F_local](https://i.imgur.com/XHAUZZk.png)
 
 ```bash
 # Windows
@@ -27,36 +34,50 @@ UA3F_local 仅作少量调整，修改部分日志逻辑确保兼容 Windows 和
 ./ua3f-linux-amd64 -m SOCKS5 -b 127.0.0.1 -p 1080 -f "FFF"
 ```
 
+## 📦 部署方式
+
 ### 无代理需求
 
 1. 使用 [无代理 Clash 配置](clash/ua3f-socks5-cn.yaml) 作为配置文件，复制文件内容
+    ![Imgur](https://imgur.com/0U2QVfT.png)
 2. 在 clash 中选择配置新配置文件，类型选择 local
-3. 右键新配置文件选择编辑文件，将复制的内容粘贴进去
+    ![Imgur](https://imgur.com/CXVRz9U.png)
+3. 右键新配置文件选择编辑文件，将复制的内容粘贴进去, 并且切换到这个代理文件
+    ![编辑配置文件](https://imgur.com/AKeMxan.png) ![切换配置文件](https://imgur.com/cNEGf5H.png)
 4. 在 clash 左侧代理选项卡中选择 Global-ua3f
+    ![选择代理](https://imgur.com/Ue84gZ1.png)
 5. 检查运行的 UA3F_local 是否有正常日志输出
+    ![检查日志](https://imgur.com/1l1qOTF.png)
 6. 测试是否成功：[测试网站](http://ua.233996.xyz)，请检查服务端 UA 是否为 FFF
+    ![测试结果](https://imgur.com/YeGIXCB.png)
 
 ### 有代理需求
 
 1. 使用 [有代理 Clash 配置](clash/ua3f-socks5-global.yaml) 作为配置文件，复制文件内容
+    ![Imgur](https://imgur.com/ZQMIzZy.png)
 2. 在 clash 中选择配置新配置文件，类型选择 local
+    ![Imgur](https://imgur.com/CXVRz9U.png)
 3. 右键新配置文件选择编辑文件，将复制的内容粘贴进去
+    ![编辑配置文件](https://imgur.com/AKeMxan.png) ![切换配置文件](https://imgur.com/cNEGf5H.png)
 4. 将你原本的订阅连接填写在文件中对应的位置
+    ![填写订阅](https://imgur.com/h0BmxCg.png)
 5. 在 clash 左侧代理选项卡中选择 CN-ua3f，其他的代理选项按照你的需求选择
+    ![选择代理](https://imgur.com/dQv7L0r.png)
 6. 检查运行的 UA3F_local 是否有正常日志输出
 7. 测试是否成功：[测试网站](http://ua.233996.xyz)，请检查服务端 UA 是否为 FFF
 
 ### 手机端部署
-1. clash-(左侧)设置-局域网设置  打开这个选项
+
+> 注意：电脑最好要在路由器后台固定 DHCP 分配的地址
+
+1. clash-(左侧)设置-局域网设置 打开这个选项
 2. 手机打开 wifi 配置页面-高级设置-代理模式-手动-设置 ip 为路由器为电脑下发的 ip 地址, 端口请按照 clash 设置填写, 我提供的为 7897
+    ![手机配置](https://imgur.com/g6Z86Aj.png)
 3. 测试是否成功：[测试网站](http://ua.233996.xyz)，请检查服务端 UA 是否为 FFF
-
-
-
 
 ## ⚙️ 使用方法
 
-相关命令行启动参数：
+### 命令行参数
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
