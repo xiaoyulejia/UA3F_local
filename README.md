@@ -20,8 +20,11 @@ UA3F_local 仅作少量调整，修改部分日志逻辑确保兼容 Windows 和
 # Windows
 .\ua3f-windows-amd64.exe -m SOCKS5 -p 1080 -f "FFF"
 
-# macOS & Linux
-./ua3f -m SOCKS5 -b 127.0.0.1 -p 1080 -f "FFF"
+# macOS
+./ua3f-darwin-amd64 -m SOCKS5 -b 127.0.0.1 -p 1080 -f "FFF"
+
+# Linux
+./ua3f-linux-amd64 -m SOCKS5 -b 127.0.0.1 -p 1080 -f "FFF"
 ```
 
 ### 无代理需求

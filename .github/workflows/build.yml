@@ -1,7 +1,13 @@
 name: build-binaries
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build:
@@ -62,3 +68,33 @@ jobs:
         with:
           name: ua3f-${{ matrix.name }}
           path: src/dist/${{ matrix.name }}
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create checksums
+        run: |
+          cd artifacts
+          find . -type f -print0 | xargs -0 sha256sum > SHA256SUMS.txt
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: UA3F ${{ github.ref_name }}
+          body: |
+            ## 下载说明
+            - `ua3f-linux-amd64`：64 位 Linux，解压后 `chmod +x ua3f-*`，运行 `./ua3f -m SOCKS5 -p 1080`
+            - `ua3f-darwin-amd64`：Intel macOS，`chmod +x ua3f-*` 后运行；Apple Silicon 可自行交叉编译 arm64
+            - `ua3f-windows-amd64.exe`：64 位 Windows，PowerShell 下执行 `.\ua3f-windows-amd64.exe -m SOCKS5 -p 1080`
+            - 默认日志会写入各自系统的日志目录，需更改请设置 `UA3F_LOG_DIR`
+            - 查看更多参数请运行 `ua3f -h`
+          files: |
+            artifacts/**/*
