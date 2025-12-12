@@ -1,5 +1,12 @@
 package statistics
 
+import (
+	"log/slog"
+	"path/filepath"
+
+	"github.com/sunbk201/ua3f/internal/paths"
+)
+
 type Recorder struct {
 	RewriteRecordList     *RewriteRecordList
 	PassThroughRecordList *PassThroughRecordList
@@ -7,10 +14,16 @@ type Recorder struct {
 }
 
 func New() *Recorder {
+	logDir, err := paths.EnsureLogDir()
+	if err != nil {
+		slog.Warn("statistics.New ensure log dir", slog.Any("error", err))
+		logDir = "."
+	}
+
 	return &Recorder{
-		RewriteRecordList:     NewRewriteRecordList("/var/log/ua3f/rewrite_stats"),
-		PassThroughRecordList: NewPassThroughRecordList("/var/log/ua3f/pass_stats"),
-		ConnectionRecordList:  NewConnectionRecordList("/var/log/ua3f/conn_stats"),
+		RewriteRecordList:     NewRewriteRecordList(filepath.Join(logDir, "rewrite_stats")),
+		PassThroughRecordList: NewPassThroughRecordList(filepath.Join(logDir, "pass_stats")),
+		ConnectionRecordList:  NewConnectionRecordList(filepath.Join(logDir, "conn_stats")),
 	}
 }
 

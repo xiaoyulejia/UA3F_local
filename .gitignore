@@ -26,3 +26,7 @@ dist/
 scripts/ipkg/etc/
 scripts/ipkg/usr/
 test/
+
+# Ignore cache and module files in src directory
+src/.cache
+src/.gomod

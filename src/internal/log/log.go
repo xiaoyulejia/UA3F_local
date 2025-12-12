@@ -1,30 +1,40 @@
 package log
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/sunbk201/ua3f/internal/config"
+	"github.com/sunbk201/ua3f/internal/paths"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-const log_file = "/var/log/ua3f/ua3f.log"
-
 func SetLogConf(level string) {
-	writer2 := os.Stdout
-	writer3 := &lumberjack.Logger{
-		Filename:   log_file,
-		MaxSize:    5, // megabytes
-		MaxBackups: 5,
-		MaxAge:     7, // days
-		LocalTime:  true,
-		Compress:   true,
+	primaryWriter := os.Stdout
+
+	var writers []io.Writer
+	writers = append(writers, primaryWriter)
+
+	if logDir, err := paths.EnsureLogDir(); err == nil {
+		fileWriter := &lumberjack.Logger{
+			Filename:   filepath.Join(logDir, "ua3f.log"),
+			MaxSize:    5, // megabytes
+			MaxBackups: 5,
+			MaxAge:     7, // days
+			LocalTime:  true,
+			Compress:   true,
+		}
+		writers = append(writers, fileWriter)
+	} else {
+		fmt.Fprintf(os.Stderr, "UA3F: failed to prepare log directory %q: %v\n", paths.LogDir(), err)
 	}
 
-	multiWriter := io.MultiWriter(writer2, writer3)
+	multiWriter := io.MultiWriter(writers...)
 
 	var logLevel slog.Level
 	switch strings.ToLower(level) {
