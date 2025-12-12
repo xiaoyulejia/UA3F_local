@@ -1,0 +1,64 @@
+name: build-binaries
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: linux-amd64
+            goos: linux
+            goarch: amd64
+            ext: ""
+          - name: darwin-amd64
+            goos: darwin
+            goarch: amd64
+            ext: ""
+          - name: windows-amd64
+            goos: windows
+            goarch: amd64
+            ext: .exe
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('src/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download dependencies
+        working-directory: src
+        run: go mod download
+
+      - name: Build ${{ matrix.name }}
+        working-directory: src
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          mkdir -p dist/${{ matrix.name }}
+          go build -o dist/${{ matrix.name }}/ua3f-${{ matrix.name }}${{ matrix.ext }} .
+
+      - name: Upload artifact ${{ matrix.name }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ua3f-${{ matrix.name }}
+          path: src/dist/${{ matrix.name }}
